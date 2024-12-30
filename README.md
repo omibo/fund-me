@@ -1,66 +1,109 @@
-## Foundry
+# Fund Me Smart Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A decentralized crowdfunding smart contract built with Solidity that allows users to fund the contract and only permits the owner to withdraw the funds. The contract includes price feed functionality using Chainlink oracles to convert ETH to USD.
 
-Foundry consists of:
+## Acknowledgments
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+This project was developed as part of the [Cyfrin Updraft's Foundry Fundamentals course](https://updraft.cyfrin.io/), an advanced smart contract development curriculum. The course provides comprehensive training in Foundry tooling and Solidity development best practices.
 
-## Documentation
+## Features
 
-https://book.getfoundry.sh/
+- ETH to USD conversion using Chainlink Price Feeds
+- Minimum funding amount requirement in USD
+- Owner-only withdrawal
+- Automated fund tracking per contributor
+- Gas-optimized using immutable variables and custom errors
+- Comprehensive test coverage
 
-## Usage
+## Tools & Technologies
 
-### Build
+- **Solidity** - Smart contract development
+- **Foundry** - Development framework
+- **Chainlink** - Price feed oracles
 
+## Prerequisites
+
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Foundry](https://book.getfoundry.sh/getting-started/installation)
+
+## Installation
+
+1. Clone the repository
 ```shell
-$ forge build
+git clone https://github.com/your-username/fund-me
+cd fund-me
 ```
 
-### Test
-
+2. Install dependencies
 ```shell
-$ forge test
+forge install
 ```
 
-### Format
-
+3. Build the project
 ```shell
-$ forge fmt
+forge build
 ```
 
-### Gas Snapshots
+## Testing
 
+Run the test suite:
 ```shell
-$ forge snapshot
+forge test
 ```
 
-### Anvil
-
+For detailed gas reports:
 ```shell
-$ anvil
+forge test --gas-report
 ```
 
-### Deploy
+## Deployment
 
+1. Set up your environment variables:
 ```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+cp .env.example .env
 ```
 
-### Cast
+2. Add your private key and RPC URL to `.env`
 
+3. Deploy to network:
 ```shell
-$ cast <subcommand>
+forge script script/DeployFundMe.s.sol:DeployFundMe --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast
 ```
 
-### Help
+## Contract Interaction
 
+### Funding
+Send ETH to the contract (minimum 5 USD equivalent):
 ```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+cast send <CONTRACT_ADDRESS> "fund()" --value 0.1ether --rpc-url $RPC_URL --private-key $PRIVATE_KEY
 ```
+
+### Withdrawal (Owner Only)
+Withdraw all funds from the contract:
+```shell
+cast send <CONTRACT_ADDRESS> "withdraw()" --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+```
+
+## Contract Details
+
+### Key Functions
+
+- `fund()`: Allows users to fund the contract with ETH
+- `withdraw()`: Enables the owner to withdraw all funds
+- `getVersion()`: Returns the price feed version
+- `getPrice()`: Gets the latest ETH/USD price
+- `getConversion()`: Converts ETH amount to USD
+- `getAddressToAmountFunded()`: Returns amount funded by an address
+- `getFunder()`: Returns funder at given index
+- `getOwner()`: Returns contract owner address
+
+### Security Features
+
+- Owner-only withdrawal using modifier
+- Minimum funding amount check
+- Chainlink price feed integration
+- Withdrawal pattern implementation
+
+## License
+
+This project is licensed under the MIT License.
